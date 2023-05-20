@@ -25,10 +25,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        //gallery data
         const galleryCollection = client.db('toyStore').collection('gallery');
 
         app.get('/gallery', async (req, res) => {
             const cursor = galleryCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        //All Toys data
+        const allToysCollection = client.db('toyStore').collection('allToys');
+
+        app.get('/alltoys', async (req, res) => {
+            const cursor = allToysCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
