@@ -55,17 +55,49 @@ async function run() {
         const aToyCollection = client.db('toyStore').collection('atoy');
 
         //data get from mongodb
-        app.get('/atoy',async(req,res)=>{
-            const cursor=aToyCollection.find();
-            const  a_toy=await cursor.toArray();
+        app.get('/atoy', async (req, res) => {
+            const cursor = aToyCollection.find();
+            const a_toy = await cursor.toArray();
             res.send(a_toy);
         })
 
         //data send to mongodb
-        app.post('/atoy',async(req,res)=>{
-            const newToy=req.body;
+        app.post('/atoy', async (req, res) => {
+            const newToy = req.body;
             console.log(newToy);
-            const a_toy=await aToyCollection.insertOne(newToy);
+            const a_toy = await aToyCollection.insertOne(newToy);
+            res.send(a_toy);
+        })
+
+        //update data from My Toys
+        app.get('/atoy/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const a_toy = await aToyCollection.findOne(query);
+            res.send(a_toy);
+        })
+
+        app.put('/atoy/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedToy =req.body;
+            const toy = {
+                $set: {
+                    price:updatedToy.price,
+                    quantity:updatedToy.quantity,
+                    description:updatedToy.description
+                }
+            }
+            const a_toy=await aToyCollection.updateOne(filter,toy,options);
+            res.send(a_toy);
+        })
+
+        //delete data from My Toys
+        app.delete('/atoy/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const a_toy = await aToyCollection.deleteOne(query);
             res.send(a_toy);
         })
 
