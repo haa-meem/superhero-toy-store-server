@@ -61,6 +61,13 @@ async function run() {
             res.send(a_toy);
         })
 
+        app.get('/atoy/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const a_toy = await aToyCollection.findOne(query);
+            res.send(a_toy);
+        })
+
         //data send to mongodb
         app.post('/atoy', async (req, res) => {
             const newToy = req.body;
@@ -70,26 +77,20 @@ async function run() {
         })
 
         //update data from My Toys
-        app.get('/atoy/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) }
-            const a_toy = await aToyCollection.findOne(query);
-            res.send(a_toy);
-        })
 
         app.put('/atoy/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
-            const updatedToy =req.body;
+            const updatedToy = req.body;
             const toy = {
                 $set: {
-                    price:updatedToy.price,
-                    quantity:updatedToy.quantity,
-                    description:updatedToy.description
+                    price: updatedToy.price,
+                    quantity: updatedToy.quantity,
+                    description: updatedToy.description
                 }
             }
-            const a_toy=await aToyCollection.updateOne(filter,toy,options);
+            const a_toy = await aToyCollection.updateOne(filter, toy, options);
             res.send(a_toy);
         })
 
