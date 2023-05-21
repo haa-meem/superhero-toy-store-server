@@ -30,8 +30,8 @@ async function run() {
 
         app.get('/gallery', async (req, res) => {
             const cursor = galleryCollection.find();
-            const result = await cursor.toArray();
-            res.send(result);
+            const gallery = await cursor.toArray();
+            res.send(gallery);
         })
 
         //All Toys data
@@ -54,11 +54,19 @@ async function run() {
         //Add A Toy
         const aToyCollection = client.db('toyStore').collection('atoy');
 
+        //data get from mongodb
+        app.get('/atoy',async(req,res)=>{
+            const cursor=aToyCollection.find();
+            const  a_toy=await cursor.toArray();
+            res.send(a_toy);
+        })
+
+        //data send to mongodb
         app.post('/atoy',async(req,res)=>{
             const newToy=req.body;
             console.log(newToy);
-            const result=await aToyCollection.insertOne(newToy);
-            res.send(result);
+            const a_toy=await aToyCollection.insertOne(newToy);
+            res.send(a_toy);
         })
 
         // Send a ping to confirm a successful connection
